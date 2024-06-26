@@ -1,6 +1,26 @@
 -- local require = require("lvim.utils.require").require
 local core_plugins = {
   { "folke/lazy.nvim", tag = "stable" },
+  {"tpope/vim-dispatch"},             -- dependencia para laravel.vim
+  {"tpope/vim-projectionist"},        -- dependencia para laravel.vim
+  {"noahfrederick/vim-composer"},     -- dependencia para laravel.vim
+  {"jwalton512/vim-blade"},
+  {"noahfrederick/vim-laravel"},
+  {
+    "olimorris/persisted.nvim",
+    config = function()
+      require("persisted").setup()
+    end,
+  },
+  {
+    "phaazon/hop.nvim",
+    event = "BufRead",
+    config = function()
+      require("hop").setup()
+      vim.api.nvim_set_keymap("n", "s", ":HopChar2<cr>", {silent = true})
+      vim.api.nvim_set_keymap("n", "S", ":HopWord<cr>", {silent = true})
+    end,
+  },
   {
     "neovim/nvim-lspconfig",
     lazy = true,
@@ -90,6 +110,9 @@ local core_plugins = {
     config = function()
       local utils = require "lvim.utils"
       local paths = {}
+      lvim.builtin.luasnip.filetype_extend = {
+        blade = { "html" },
+      }
       if lvim.builtin.luasnip.sources.friendly_snippets then
         paths[#paths + 1] = utils.join_paths(get_runtime_dir(), "site", "pack", "lazy", "opt", "friendly-snippets")
       end
